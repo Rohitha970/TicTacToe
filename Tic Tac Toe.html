@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://tictactoegame14.tiiny.site/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            width: max-content;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background: #eee;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+        .cell.taken {
+            cursor: not-allowed;
+        }
+        #status {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 2px solid black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 1em;
+        }
+    </style>
+<script defer="" data-domain="tictactoegame14.tiiny.site" src="./Tic Tac Toe_files/plausible.js.download"></script><script type="text/javascript" src="./Tic Tac Toe_files/ad-script.js.download"></script></head>
+<body><div style="position: fixed !important; bottom: 0% !important; left: 0% !important; right: 0% !important; width: 100% !important; height: 55px !important; z-index: 9999 !important;"><a href="https://tiiny.host/?ref=free-site">
+    <div style="padding: 10px !important; height: 55px; text-align: center; background: rgb(220,137,232) !important; background: linear-gradient(141deg, rgba(220,137,232,1) 0%, rgba(144,64,204,1) 100%) !important;">
+      <img style="height: 35px !important; width: auto !important;" src="./Tic Tac Toe_files/ad.png" alt="tiiny.host">
+    </div>
+  </a></div>
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board"><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
+    <div id="status">Player X's turn</div>
+    <div class="popup" id="popup">
+        <p id="winnerText"></p>
+        <button onclick="restartGame()">Restart Game</button>
+    </div>
+    <button onclick="restartGame()" style="margin-top: 20px; padding: 10px 15px; font-size: 1em;">Restart Game</button>
+    <script>
+        const board = document.getElementById("board");
+        const status = document.getElementById("status");
+        const popup = document.getElementById("popup");
+        const winnerText = document.getElementById("winnerText");
+        let currentPlayer = "X";
+        let gameBoard = ["", "", "", "", "", "", "", "", ""];
+        
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    return gameBoard[a];
+                }
+            }
+            return gameBoard.includes("") ? null : "Draw";
+        }
+
+        function handleClick(index) {
+            if (gameBoard[index] || checkWinner()) return;
+            
+            gameBoard[index] = currentPlayer;
+            renderBoard();
+            
+            let winner = checkWinner();
+            if (winner) {
+                if (winner === "Draw") {
+                    status.textContent = "It's a Draw!";
+                    winnerText.textContent = "It's a Draw!";
+                } else {
+                    status.textContent = `Player ${winner} Wins!`;
+                    winnerText.textContent = `Player ${winner} Wins!`;
+                }
+                popup.style.display = "block";
+            } else {
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                status.textContent = `Player ${currentPlayer}'s turn`;
+            }
+        }
+
+        function renderBoard() {
+            board.innerHTML = "";
+            gameBoard.forEach((value, index) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                if (value) cell.classList.add("taken");
+                cell.textContent = value;
+                cell.addEventListener("click", () => handleClick(index));
+                board.appendChild(cell);
+            });
+        }
+
+        function restartGame() {
+            gameBoard = ["", "", "", "", "", "", "", "", ""];
+            currentPlayer = "X";
+            status.textContent = "Player X's turn";
+            popup.style.display = "none";
+            renderBoard();
+        }
+        
+        renderBoard();
+    </script>
+
+
+</body></html>
